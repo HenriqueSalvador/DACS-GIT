@@ -2,13 +2,16 @@ package br.univille.dacs2020.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -22,8 +25,9 @@ public class Consulta {
     private String status;
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Paciente paciente;
-
-    private ArrayList<ProcedimentoRealizado> listaProcedimentos = new ArrayList();
+   @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CONSULTA_ID")
+    private List<ProcedimentoRealizado> listaProcedimentos = new ArrayList();
 
     public Consulta() {
         //listaProcedimentos.add();
