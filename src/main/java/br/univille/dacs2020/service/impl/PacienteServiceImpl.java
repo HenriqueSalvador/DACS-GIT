@@ -23,13 +23,19 @@ public class PacienteServiceImpl implements PacienteService {
     }
 
     @Override
-    public List<Paciente> getaLL() {
+    public List<Paciente> getAll() {
         return repository.findAll();
     }
+
 
     @Override
     public void delete(Paciente paciente) {
         repository.delete(paciente);
+    }
+
+    @Override
+    public List<Paciente> getAllByNome(String nome) {
+        return repository.findAllByNomeContains(nome);
     }
     
 }

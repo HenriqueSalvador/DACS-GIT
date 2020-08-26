@@ -6,10 +6,22 @@
         
     <div class="container">
         <nav th:replace="layout :: menu">(menu)</nav>
-        <h1> Pacinete</h1>
-        <a th:href="@{/paciente/novo}" 
-        class="btn btn-primary" role="button">Novo</a>
-        <table class="table">
+        <div class="alert alert-light" role="alert">
+            <strong>Pacientes</strong> tela de administração.
+          </div>
+        <a class="btn btn-success" th:href="@{/paciente/novo}"> 🙍‍♂️ Novo </a>
+        <a class="btn btn-secondary" th:href="@{/paciente/novo}"> 🔍 Pesquisar </a>  
+        <p></p>
+
+        <form class="form-inline my-2 my-sm-0" th:action="@{/paciente}">
+            <input class="form-control mr-sm-2" type="search" 
+            name="busca" 
+            placeholder="Digite um nome..." aria-label="Search">       
+            <button class="btn btn-main my-2 my-sm-0"type="submit">Pesquisar</button>
+        </form>
+
+        <p></p>
+        <table class="table" id="pacientes">
             <thead>
                 <th>ID</th>
                 <th>Nome</th>
@@ -25,12 +37,31 @@
                     <td th:text="${umpaciente.dataNascimento}"></td>
                     <td>
                         <a th:href="@{'/paciente/alterar/' + ${umpaciente.id}}" class="btn btn-primary">Alterar</a>
+                        <button class='btn btn-danger js-delete'
+                                th:data-paciente-id="${umpaciente.id}">
+                                Excluir</button>
                     </td>
                 </tr>
             </tbody>
         </table>
         <strong th:text="${dataatualizada}">
-        </div>>
-        <div th:include="layout :: footer" id="footer">(footer)</div>       
+        </div>
+        <div th:include="layout :: footer" id="footer">(footer)</div> 
+        <script type="text/javascript"> 
+         $(document).ready(function(){
+            $("#pacientes").on("click",".js-delete", function(){
+                var button = $(this);
+                bootbox.confirm("Confirma exclusão do paciente?", function(result){
+                    if(result){
+                        $.ajax({                                
+                            url: "/paciente/delete/" + button.attr("data-paciente-id"),                                
+                            method: "GET",                                
+                            success: function () {                                    
+                            window.location.href = "/paciente/"}});
+                    }
+                    });
+            })
+         });
+        </script>      
     </body>
 </html>

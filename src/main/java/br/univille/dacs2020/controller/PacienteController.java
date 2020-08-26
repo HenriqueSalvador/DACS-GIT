@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.univille.dacs2020.model.Paciente;
@@ -24,8 +25,13 @@ public class PacienteController {
     private PacienteService service;
  
     @GetMapping
-    public ModelAndView index(){
-        List<Paciente> listaPacientes = service.getaLL();
+    public ModelAndView index(@RequestParam(required = false) String busca){
+        List<Paciente> listaPacientes = service.getAll();
+        if(busca == null){
+            listaPacientes = service.getAll();
+        }else{
+            listaPacientes = service.getAllByNome(busca);
+        }
         return new ModelAndView("paciente/index","listapacientes",listaPacientes);
     }
 
@@ -42,7 +48,15 @@ public class PacienteController {
     }
 
     @GetMapping(value="/alterar/{id}")
-    public ModelAndView edit(@PathVariable("id") long id, Paciente paciente) {
+    public ModelAndView edit(@PathVariable("id") Paciente paciente) {
         return new ModelAndView("paciente/form","paciente",paciente);
     }
+
+    @GetMapping(value="/delete/{id}")
+    public ModelAndView delete(@PathVariable("id") Paciente paciente) {
+        service.delete(paciente);
+        return new ModelAndView("redirect:/paciente");
+    }
+
+
 }
